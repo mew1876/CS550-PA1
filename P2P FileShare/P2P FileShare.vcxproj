@@ -120,9 +120,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IndexServer.h" />
     <ClInclude Include="Peer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IndexServer.cpp" />
     <ClCompile Include="Peer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

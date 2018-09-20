@@ -18,9 +18,15 @@
     <ClInclude Include="Peer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IndexServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Peer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
