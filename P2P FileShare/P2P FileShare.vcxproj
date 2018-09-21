@@ -129,6 +129,7 @@
     <ClInclude Include="Peer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FileShare.cpp" />
     <ClCompile Include="IndexServer.cpp" />
     <ClCompile Include="Peer.cpp" />
   </ItemGroup>
