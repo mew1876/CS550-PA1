@@ -89,7 +89,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>E:\Documents\CS 550\PA 1\rpclib-master\include;C:\Users\Julianna\Documents\Documents\Academic\CS550\CS 550 PA1\rpclib-master\rpclib-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>E:\Documents\CS 550\PA 1\rpclib-master\build\Debug;C:\Users\Julianna\Documents\Documents\Academic\CS550\CS 550 PA1\rpclib-master\rpclib-master\built with cmake\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>rpc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
