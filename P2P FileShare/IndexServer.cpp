@@ -12,17 +12,18 @@ std::vector<int> IndexServer::search(std::string fileName) {
 	if (index != fileNameToPeerIDIndex.end()) {
 		return index->second; // vector of PeerID variables
 	}
-	else
-	{
+	else {
 		return {};
 	}
 }
+
 void IndexServer::remove(int peerID, std::string fileName) {
 	auto mapIndex = fileNameToPeerIDIndex.find(fileName);
 	if (mapIndex != fileNameToPeerIDIndex.end()) {
 		std::vector<int> peerIDVector = mapIndex->second;
 		for (std::vector<int>::iterator peerIDIndex = peerIDVector.begin(); peerIDIndex != peerIDVector.end();) {
 			if (*peerIDIndex == peerID) {
+				//shouldnt we erase the vector entry here, instead of the map entry?
 				fileNameToPeerIDIndex.erase(mapIndex);
 			}
 		}
@@ -37,9 +38,9 @@ void IndexServer::add(int peerID, std::string fileName) {
 	if (mapIndex != fileNameToPeerIDIndex.end()) {
 		fileNameToPeerIDIndex.insert({ fileName, {peerID} });
 	}
-	else
-	{
+	else {
 		auto peerIDVector = mapIndex->second;
+		//looks like we're still removing things instead of adding the new entry?
 		for (auto peerIDIndex = peerIDVector.begin(); peerIDIndex != peerIDVector.end();) {
 			if (*peerIDIndex == peerID) {
 				fileNameToPeerIDIndex.erase(mapIndex);
@@ -50,6 +51,7 @@ void IndexServer::add(int peerID, std::string fileName) {
 		}
 	}
 }
+
 void IndexServer::add(int peerID, std::vector<std::string> fileNames) {
 	for (std::string filename : fileNames) {
 		add(peerID, filename);
