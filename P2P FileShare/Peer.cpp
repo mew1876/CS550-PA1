@@ -10,15 +10,15 @@ Peer::Peer()
 	CreateDirectory("Peers", NULL);
 	CreateDirectory(getPath().c_str(), NULL);
 	server.bind("getFile", [this](std::string fileName) { return this->getFile(fileName); });
-	server.async_run(4);
+	server.async_run(1);
 }
 
 void Peer::add(std::string fileName) {
-	indexClient.call("add", fileName);
+	indexClient.call("add", peerID, fileName);
 }
 
 void Peer::add(std::vector<std::string> fileNames) {
-	indexClient.call("addVector", fileNames);
+	indexClient.call("addVector", peerID, fileNames);
 }
 
 void Peer::retrieve(std::string fileName) {

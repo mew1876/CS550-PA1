@@ -1,23 +1,24 @@
 #include "IndexServer.h"
 #include <vector>
+#include <iostream>
 
 IndexServer::IndexServer()
-: indexServer("localhost", 8000) {
+	: indexServer(8000) {
 	indexServer.bind("search", [this](std::string fileName) { return this->search(fileName); });
-	indexServer.bind("remove", [this](int peerID, std::string fileName) { return this->remove(peerID, fileName); });
-	indexServer.bind("add", [this](int peerID, std::string fileName) { return this->add(peerID, fileName); });
-	indexServer.bind("addVector", [this](int peerID, std::vector<std::string> fileNames) { return this->add(peerID, fileNames); });
-	indexServer.async_run(4);
+	indexServer.bind("remove", [this](int peerID, std::string fileName) { this->remove(peerID, fileName); });
+	indexServer.bind("add", [this](int peerID, std::string fileName) { this->add(peerID, fileName); });
+	indexServer.bind("addVector", [this](int peerID, std::vector<std::string> fileNames) { this->add(peerID, fileNames); });
+	indexServer.async_run(1);
 	fileNameToPeerIDIndex = {};
 }
 
 std::vector<int> IndexServer::search(std::string fileName) {
 	auto index = fileNameToPeerIDIndex.find(fileName);
-	if (index != fileNameToPeerIDIndex.end()) {
-		return index->second; // vector of PeerID variables
+	if (index == fileNameToPeerIDIndex.end()) {
+		return {};
 	}
 	else {
-		return {};
+		return index->second; // vector of PeerID variables
 	}
 }
 
@@ -43,7 +44,7 @@ void IndexServer::remove(int peerID, std::string fileName) {
 void IndexServer::add(int peerID, std::string fileName) {
 	auto mapIndex = fileNameToPeerIDIndex.find(fileName);
 	// if the fileName is not in the index, make a new entry
-	if (mapIndex != fileNameToPeerIDIndex.end()) {
+	if (mapIndex == fileNameToPeerIDIndex.end()) {
 		fileNameToPeerIDIndex.insert({ fileName, {peerID} });
 	}
 	// otherwise add the new peerID to the fileName entry
