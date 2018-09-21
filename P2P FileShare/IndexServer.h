@@ -8,7 +8,7 @@ class IndexServer
 	std::vector<int> search(std::string fileName);
 	void remove(int peerID, std::string fileName);
 	void add(int peerID, std::string fileName);
-	void add(int peerID, std::string fileNames[]);
+	void add(int peerID, std::vector<std::string> fileNames);
 public:
 	IndexServer();
 	~IndexServer();

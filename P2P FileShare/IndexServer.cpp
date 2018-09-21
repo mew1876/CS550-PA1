@@ -1,5 +1,5 @@
 #include "IndexServer.h"
-
+#include <vector>
 
 IndexServer::IndexServer()
 {
@@ -50,9 +50,9 @@ void IndexServer::add(int peerID, std::string fileName) {
 		}
 	}
 }
-void IndexServer::add(int peerID, std::string fileNames[]) {
-	for (std::string name : fileNames->begin) {
-		add(peerID, name);
+void IndexServer::add(int peerID, std::vector<std::string> fileNames) {
+	for (std::string filename : fileNames) {
+		add(peerID, filename);
 	}
 }
 
