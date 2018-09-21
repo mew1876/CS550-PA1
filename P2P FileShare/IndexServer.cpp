@@ -3,7 +3,6 @@
 
 IndexServer::IndexServer()
 {
-	//std::unordered_map<std::string, std::vector<int>> fileNameToPeerIDIndex
 	fileNameToPeerIDIndex = {};
 }
 
@@ -19,14 +18,17 @@ std::vector<int> IndexServer::search(std::string fileName) {
 
 void IndexServer::remove(int peerID, std::string fileName) {
 	auto mapIndex = fileNameToPeerIDIndex.find(fileName);
+	// check that fileName is in the index
 	if (mapIndex != fileNameToPeerIDIndex.end()) {
 		std::vector<int> peerIDVector = mapIndex->second;
+		// loop through all peerIDs that have fileName
 		for (std::vector<int>::iterator peerIDIndex = peerIDVector.begin(); peerIDIndex != peerIDVector.end();) {
 			if (*peerIDIndex == peerID) {
-				//shouldnt we erase the vector entry here, instead of the map entry?
-				fileNameToPeerIDIndex.erase(mapIndex);
+				// erase the vector entry for the peerID
+				peerIDVector.erase(peerIDIndex);
 			}
 		}
+		// if the file doesn't exist in any peers anymore, delete the file's map entry
 		if (peerIDVector.empty()) {
 			fileNameToPeerIDIndex.erase(mapIndex);
 		}
@@ -35,20 +37,14 @@ void IndexServer::remove(int peerID, std::string fileName) {
 
 void IndexServer::add(int peerID, std::string fileName) {
 	auto mapIndex = fileNameToPeerIDIndex.find(fileName);
+	// if the fileName is not in the index, make a new entry
 	if (mapIndex != fileNameToPeerIDIndex.end()) {
 		fileNameToPeerIDIndex.insert({ fileName, {peerID} });
 	}
+	// otherwise add the new peerID to the fileName entry
 	else {
 		auto peerIDVector = mapIndex->second;
-		//looks like we're still removing things instead of adding the new entry?
-		for (auto peerIDIndex = peerIDVector.begin(); peerIDIndex != peerIDVector.end();) {
-			if (*peerIDIndex == peerID) {
-				fileNameToPeerIDIndex.erase(mapIndex);
-			}
-		}
-		if (peerIDVector.empty()) {
-			fileNameToPeerIDIndex.erase(mapIndex);
-		}
+		peerIDVector.push_back(peerID);
 	}
 }
 
