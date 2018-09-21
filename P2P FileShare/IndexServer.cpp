@@ -54,8 +54,8 @@ void IndexServer::add(int peerID, std::string fileName) {
 }
 
 void IndexServer::add(int peerID, std::vector<std::string> fileNames) {
-	for (std::string filename : fileNames) {
-		add(peerID, filename);
+	for (std::string fileName : fileNames) {
+		add(peerID, fileName);
 	}
 }
 

@@ -9,11 +9,13 @@ class Peer {
 	int peerID;
 	rpc::client indexClient;
 	rpc::server server;
-	std::vector<uint8_t> getFile(std::string filename);
+	std::vector<uint8_t> getFile(std::string fileName);
 	std::string getPath();
 public:
 	Peer();
 	~Peer();
-	void retrieve(std::string filename);
+	void add(std::string fileName);
+	void add(std::vector<std::string> fileName);
+	void retrieve(std::string fileName);
 };
 
