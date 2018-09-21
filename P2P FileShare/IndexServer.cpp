@@ -2,7 +2,12 @@
 #include <vector>
 
 IndexServer::IndexServer()
-{
+: indexServer("localhost", 8000) {
+	indexServer.bind("search", [this](std::string fileName) { return this->search(fileName); });
+	indexServer.bind("remove", [this](int peerID, std::string fileName) { return this->remove(peerID, fileName); });
+	indexServer.bind("add", [this](int peerID, std::string fileName) { return this->add(peerID, fileName); });
+	indexServer.bind("addVector", [this](int peerID, std::vector<std::string> fileNames) { return this->add(peerID, fileNames); });
+	indexServer.async_run(4);
 	fileNameToPeerIDIndex = {};
 }
 

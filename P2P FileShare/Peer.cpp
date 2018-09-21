@@ -13,8 +13,7 @@ Peer::Peer()
 
 void Peer::retrieve(std::string filename) {
 	//Get a vector of peer IDs from central server, let user pick an ID to copy from
-	//std::vector<int> sources = indexClient.call("search", filename).as<std::vector<int>>();
-	std::vector<int> sources{ 1 };
+	std::vector<int> sources = indexClient.call("search", filename).as<std::vector<int>>();
 	if (sources.size() == 0) {
 		std::cout << "No peers found with " << filename << std::endl;
 	}
