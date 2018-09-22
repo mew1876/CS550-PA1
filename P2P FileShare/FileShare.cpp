@@ -10,16 +10,9 @@ int main(int argc, char* argv[]) {
 	IndexServer server;
 	Peer peer1;
 	Peer peer2;
-
-	std::ofstream file("Peers/Peer 1/test.txt");
-	file << "Sample text";
-	file.close();
-
-	peer1.add("test.txt");
-	
-	peer2.retrieve("test.txt");
-
 	createFile(1, 2);
+	peer1.add("File 1.txt");	
+	peer2.retrieve("File 1.txt");	
 }
 
 void createFile(int peerID, int fileSizeInKB) {
