@@ -12,10 +12,11 @@ class Peer {
 	std::vector<uint8_t> getFile(std::string fileName);
 	std::string getPath();
 public:
+	static bool AUTO_PEER_SELECTION;
 	Peer();
 	~Peer();
 	void add(std::string fileName);
 	void add(std::vector<std::string> fileName);
-	void retrieve(std::string fileName);
+	bool retrieve(std::string fileName);
 };
 
