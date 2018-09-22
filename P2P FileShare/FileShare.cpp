@@ -1,6 +1,5 @@
 #include "Peer.h"
 #include "IndexServer.h"
-
 #include <iostream>
 
 int currentFileID = 1;
