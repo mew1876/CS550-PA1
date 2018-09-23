@@ -10,19 +10,20 @@
 #include <tchar.h>
 #include <vector>
 
-DirectoryWatcher::DirectoryWatcher(std::string directoryString)
+DirectoryWatcher::DirectoryWatcher(std::string directoryString, int creatorPeerID)
 	: indexClient("localhost", 8000) {
 	LPTSTR directory = LPTSTR(directoryString.c_str());
+	originalFileListing = getFilesInDirectory(directoryString);
+	peerID = creatorPeerID;
 	WatchDirectory(directory);
 }
 
 std::vector<std::filesystem::path> DirectoryWatcher::getFilesInDirectory(std::string path)
 {
-	std::cout << path << std::endl;
 	std::vector<std::filesystem::path> returnVector = {};
 
 	if (!(std::filesystem::is_directory(path))) {
-		std::cout << "printFilesInDirectory: The given path was not a valid directory";
+		std::cout << "DirectoryWatcher::printFilesInDirectory: The given path was not a valid directory";
 		return {};
 	}
 	else {
@@ -76,8 +77,7 @@ void DirectoryWatcher::WatchDirectory(LPTSTR lpDir)
 	while (TRUE)
 	{
 		// Wait for notification.
-
-		printf("\nWaiting for notification...\n");
+		//printf("\nWaiting for notification...\n");
 
 		dwWaitStatus = WaitForSingleObject(dwChangeHandle, INFINITE);
 
@@ -102,7 +102,6 @@ void DirectoryWatcher::WatchDirectory(LPTSTR lpDir)
 			// than INFINITE is used in the Wait call and no changes occur.
 			// In a single-threaded environment you might not want an
 			// INFINITE wait.
-
 			printf("\nNo changes in the timeout period.\n");
 			break;
 
@@ -119,8 +118,32 @@ void DirectoryWatcher::RefreshDirectory(LPTSTR lpDir)
 	// This is where you might place code to refresh your
 	// directory listing, but not the subtree because it
 	// would not be necessary.
+	//_tprintf(TEXT("Directory (%s) changed.\n"), lpDir);
 
-	_tprintf(TEXT("Directory (%s) changed.\n"), lpDir);
+	std::vector<std::filesystem::path> newFileListing = getFilesInDirectory(lpDir);
+	int originalFileIndex = 0;
+	int      newFileIndex = 0;
+	while(originalFileIndex < (int)(originalFileListing.size()) && newFileIndex < (int)(newFileListing.size())){
+		std::filesystem::path originalFilePath = originalFileListing.at(originalFileIndex);
+		std::filesystem::path      newFilePath = newFileListing.at(newFileIndex);
+		int lexicographicComparison = originalFilePath.compare(newFilePath);
+		if (lexicographicComparison < 0) {
+			indexClient.call("remove", peerID, originalFilePath.string());
+			originalFileIndex++;
+		}
+		else if (lexicographicComparison == 0) {
+			originalFileIndex++;
+			newFileIndex++;
+		}
+		else if (lexicographicComparison > 0) {
+			indexClient.call("add", peerID, newFilePath.string());
+			newFileIndex++;
+		}
+		else {
+			std::cout << "DirectoryWatcher::RefreshDirectory: If you got here something is very wrong.";
+		}
+	}
+
 }
 
 

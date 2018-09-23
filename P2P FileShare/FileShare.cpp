@@ -14,8 +14,6 @@ int main(int argc, char* argv[]) {
 	createFile(1, 2);
 	peer1.add("File 1.txt");	
 	peer2.retrieve("File 1.txt");	
-
-	DirectoryWatcher dw ("Peers/Peer 1");
 	
 	std::cout << "test directoryWatcher by adding/removing files from 'Peers/Peer 1'" << std::endl;
 	// loop to allow you to test dw

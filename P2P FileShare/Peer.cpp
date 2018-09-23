@@ -11,9 +11,11 @@ Peer::Peer()
 	: indexClient("localhost", 8000), server(8000 + currentPeerID) {
 	peerID = currentPeerID++;
 	CreateDirectory("Peers", NULL);
-	CreateDirectory(getPath().c_str(), NULL);
+	std::string currentDirectoryString = getPath();
+	CreateDirectory(currentDirectoryString.c_str(), NULL);
 	server.bind("getFile", [this](std::string fileName) { return this->getFile(fileName); });
 	server.async_run(1);
+	pointerToDirectoryWatcher = new DirectoryWatcher(currentDirectoryString, peerID);
 }
 
 void Peer::add(std::string fileName) {
@@ -92,4 +94,5 @@ std::string Peer::getPath() {
 }
 
 Peer::~Peer() {
+	delete pointerToDirectoryWatcher;
 }

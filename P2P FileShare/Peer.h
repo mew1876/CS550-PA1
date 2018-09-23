@@ -1,4 +1,5 @@
 #pragma once
+#include "DirectoryWatcher.h"
 #include "rpc/client.h"
 #include "rpc/server.h"
 #include <fstream>
@@ -11,6 +12,7 @@ class Peer {
 	rpc::server server;
 	std::vector<uint8_t> getFile(std::string fileName);
 	std::string getPath();
+	DirectoryWatcher *pointerToDirectoryWatcher;
 public:
 	static bool AUTO_PEER_SELECTION;
 	Peer();
