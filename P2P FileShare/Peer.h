@@ -7,14 +7,14 @@
 
 class Peer {
 	static int currentPeerID;
-	int peerID;
 	rpc::client indexClient;
-	rpc::server server;
+	rpc::server *server;
 	std::vector<uint8_t> getFile(std::string fileName);
 	std::string getPath();
 	DirectoryWatcher *pointerToDirectoryWatcher;
 public:
 	static bool AUTO_PEER_SELECTION;
+	int peerID;
 	Peer();
 	~Peer();
 	void add(std::string fileName);

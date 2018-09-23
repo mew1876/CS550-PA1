@@ -3,13 +3,19 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <mutex>
 
 int Peer::currentPeerID = 1;
 bool Peer::AUTO_PEER_SELECTION = true;
 
+std::mutex idInit;
+
 Peer::Peer()
-	: indexClient("localhost", 8000), server(8000 + currentPeerID) {
+	: indexClient("localhost", 8000) {
+	idInit.lock();
+	server = new rpc::server(8000 + currentPeerID);
 	peerID = currentPeerID++;
+	idInit.unlock();
 	CreateDirectory("Peers", NULL);
 	std::string currentDirectoryString = getPath();
 	CreateDirectory(currentDirectoryString.c_str(), NULL);
@@ -19,19 +25,21 @@ Peer::Peer()
 }
 
 void Peer::add(std::string fileName) {
-	indexClient.call("add", peerID, fileName);
+	indexClient.async_call("add", peerID, fileName);
 }
 
 void Peer::add(std::vector<std::string> fileNames) {
-	indexClient.call("addVector", peerID, fileNames);
+	indexClient.async_call("addVector", peerID, fileNames);
 }
 
 bool Peer::retrieve(std::string fileName) {
 	//Get a vector of peer IDs from central server, let user pick an ID to copy from
 	//If AUTO_PEER_SELECTION == true then always choose last option
-	std::vector<int> sources = indexClient.call("search", fileName).as<std::vector<int>>();
+	std::vector<int> sources;
+	sources = indexClient.call("search", fileName).as<std::vector<int>>();	
 	while (sources.size() > 0) {
 		int sourceID;
+		//choose a source
 		if (AUTO_PEER_SELECTION) {
 			sourceID = sources.back();
 		}
@@ -45,6 +53,7 @@ bool Peer::retrieve(std::string fileName) {
 				std::cin >> sourceID;
 			} while (std::find(sources.begin(), sources.end(), sourceID) == sources.end());
 		}
+		//request the file from the chosen source
 		rpc::client peerClient("localhost", 8000 + sourceID);
 		try {
 			std::vector<uint8_t> bytes = peerClient.call("getFile", fileName).as<std::vector<uint8_t>>();
@@ -66,7 +75,7 @@ bool Peer::retrieve(std::string fileName) {
 }
 
 std::vector<uint8_t> Peer::getFile(std::string fileName) {
-	//Read file into byte vector, return vector
+	//Returns specified file as a vector of bytes
 	try {
 		std::ifstream file(getPath() + fileName, std::ios::binary);
 		file.unsetf(std::ios::skipws);
@@ -75,9 +84,8 @@ std::vector<uint8_t> Peer::getFile(std::string fileName) {
 		file.seekg(0, std::ios::end);
 		fileSize = file.tellg();
 		file.seekg(0, std::ios::beg);
-
 		std::vector<uint8_t> bytes;
-		bytes.reserve((unsigned int)fileSize);
+		bytes.reserve(unsigned int(fileSize));
 		bytes.insert(bytes.begin(),
 			std::istream_iterator<uint8_t>(file),
 			std::istream_iterator<uint8_t>());
@@ -94,5 +102,6 @@ std::string Peer::getPath() {
 }
 
 Peer::~Peer() {
+	delete server;
 	delete pointerToDirectoryWatcher;
 }
