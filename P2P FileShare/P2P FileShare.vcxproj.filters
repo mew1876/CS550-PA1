@@ -21,6 +21,9 @@
     <ClInclude Include="IndexServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DirectoryWatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Peer.cpp">
@@ -30,6 +33,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileShare.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectoryWatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
