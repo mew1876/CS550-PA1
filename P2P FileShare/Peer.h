@@ -18,6 +18,5 @@ public:
 	void add(std::string fileName);
 	void add(std::vector<std::string> fileName);
 	bool retrieve(std::string fileName);
-	void ping(int port);
 };
 
